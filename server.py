@@ -1,4 +1,5 @@
 import socket
+import pickle
 
 hName = socket.gethostname()
 ipAdd = socket.gethostbyname(hName)
@@ -13,10 +14,11 @@ s.listen()
 
 print("Server is on")
 
+activity_log = []
+
 while True:
     conn, addr = s.accept()
-    print("Connected to", addr)
-    data = conn.recv(BUFFER_SIZE).decode()
-    conn.send("Hallo From Server".encode())
-    print(data)
+    data = pickle.loads(conn.recv(BUFFER_SIZE))
+    activity_log.append(data)
+    print(activity_log)
     conn.close()
