@@ -1,5 +1,6 @@
 import socket
 import pickle
+from os import system, name
 
 hName = socket.gethostname()
 ipAdd = socket.gethostbyname(hName)
@@ -15,12 +16,26 @@ s.listen(1)
 print("Server is on")
 
 activity_log = []
+base_item = []
+
+def clear():
+    # for windows
+    if name == 'nt':
+        _ = system('cls')
+
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        _ = system('clear')
 
 while True:
 
     conn, addr = s.accept()
     data = pickle.loads(conn.recv(BUFFER_SIZE))
     activity_log.append(data)
-
+    
     conn.send(pickle.dumps(activity_log))
+
+    for i in activity_log :
+            print(i["activity"])
+    clear()
     conn.close()

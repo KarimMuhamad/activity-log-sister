@@ -11,11 +11,8 @@ TCP_PORT = 8080
 BUFFER_SIZE = 1024
 
 lsTodo = []
-actLog = []
-
 
 def send(command) :
-    global actLog
 
     log = {
         "host" : hName,
@@ -31,6 +28,7 @@ def send(command) :
     client.send(pickle.dumps(log))
     actLog = pickle.loads(client.recv(BUFFER_SIZE))
     client.close()
+    return actLog
 
 def clear():
     # for windows
@@ -54,7 +52,7 @@ def checkStatus(lsTd) :
     for i in lsTd :
         if(datetime.now() >= i["Waktu Berakhir"] and i["Status"] != "Selesai") :
             i["Status"] = "Berakhir"
-            send(["Unchecked", i])
+            # send(["Unchecked", i])
         elif(i["Waktu Berakhir"] > datetime.now() and i["Status"] != "Selesai") :
             i["Status"] = "Belum Selesai"
 
@@ -107,7 +105,6 @@ while 1 :
             if i["Nama"] == src :
                 if i["Status"] != "Selesai" :
                     i["Status"] = "Selesai"
-                    print(i)
                     send(["Checked", i])
                     clear()
                 else :
@@ -133,7 +130,9 @@ while 1 :
 
         
     elif inp == 4 : 
-        for i in actLog :
+        val = send(["View", None])
+
+        for i in val :
             print(i["activity"])
 
         input("")
