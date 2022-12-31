@@ -2,7 +2,6 @@ import socket
 import pickle
 from datetime import datetime
 from os import system, name
-import time
 
 hName = socket.gethostname()
 ipAdd = socket.gethostbyname(hName)
@@ -12,9 +11,12 @@ TCP_PORT = 8080
 BUFFER_SIZE = 1024
 
 lsTodo = []
+actLog = []
 
 
 def send(command) :
+    global actLog
+
     log = {
         "host" : hName,
         "ip_addres" : ipAdd,
@@ -27,6 +29,7 @@ def send(command) :
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((TCP_IP, TCP_PORT)) 
     client.send(pickle.dumps(log))
+    actLog = pickle.loads(client.recv(BUFFER_SIZE))
     client.close()
 
 def clear():
@@ -48,24 +51,25 @@ def countDown(endtime) :
     
 
 def checkStatus(lsTd) :
-    if(datetime.now() >= lsTd["Waktu Berakhir"] and lsTd["Status"] != "Selesai") :
-        lsTd["Status"] = "Berakhir"
-    elif(lsTd["Waktu Berakhir"] > datetime.now() and lsTd["Status"] != "Selesai") :
-        lsTd["Status"] = "Belum Selesai"
+    for i in lsTd :
+        if(datetime.now() >= i["Waktu Berakhir"] and i["Status"] != "Selesai") :
+            i["Status"] = "Berakhir"
+            send(["Unchecked", i])
+        elif(i["Waktu Berakhir"] > datetime.now() and i["Status"] != "Selesai") :
+            i["Status"] = "Belum Selesai"
 
 
 def printTodo(listOfTodo) :
     idx =1
     for i in lsTodo :
-        checkStatus(i)
 
         print(f'[{idx}]. {i["Nama"]} \t {i["Status"]} \t {countDown(i["Waktu Berakhir"])}')
         idx+=1
 
 while 1 :
+    checkStatus(lsTodo)
     print("To Do List App")
     printTodo(lsTodo)
-
 
     print("""
     1 : Add To Do
@@ -101,10 +105,14 @@ while 1 :
 
         for i in lsTodo :
             if i["Nama"] == src :
-                i["Status"] = "Selesai"
-                print(i)
-                send(["Checked", i])
-                # clear()
+                if i["Status"] != "Selesai" :
+                    i["Status"] = "Selesai"
+                    print(i)
+                    send(["Checked", i])
+                    clear()
+                else :
+                    print("Todo Sudah Berakhir")
+                
             else :
                 print("Todo List tidak di temukan")
                 clear()
@@ -125,6 +133,8 @@ while 1 :
 
         
     elif inp == 4 : 
-        print("Log disini")
+        for i in actLog :
+            print(i["activity"])
+
         input("")
         clear()

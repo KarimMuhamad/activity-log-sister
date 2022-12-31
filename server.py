@@ -10,15 +10,17 @@ BUFFER_SIZE = 1024
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
-s.listen()
+s.listen(1)
 
 print("Server is on")
 
 activity_log = []
 
 while True:
+
     conn, addr = s.accept()
     data = pickle.loads(conn.recv(BUFFER_SIZE))
     activity_log.append(data)
-    print(activity_log)
+
+    conn.send(pickle.dumps(activity_log))
     conn.close()
