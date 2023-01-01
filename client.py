@@ -8,7 +8,7 @@ ipAdd = socket.gethostbyname(hName)
 
 TCP_IP = '127.0.0.1'
 TCP_PORT = 8080
-BUFFER_SIZE = 1024
+BUFFER_SIZE = 8024
 
 lsTodo = []
 
@@ -133,7 +133,7 @@ while 1 :
         val = send(["View", None])
 
         for i in val :
-            print(i["activity"])
+            print(f'{i["host"]} ({i["ip_addres"]}) {i["date"]} {i["time"]} melakukan {i["activity"]} value [{i["value"]}]')
 
         input("")
         clear()
