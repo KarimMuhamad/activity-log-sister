@@ -6,9 +6,9 @@ from os import system, name
 hName = socket.gethostname()
 ipAdd = socket.gethostbyname(hName)
 
-TCP_IP = '127.0.0.1'
-TCP_PORT = 8080
-BUFFER_SIZE = 8024
+TCP_IP = '0.tcp.ap.ngrok.io'
+TCP_PORT = 12290
+BUFFER_SIZE = 4248
 
 lsTodo = []
 
@@ -82,7 +82,7 @@ while 1 :
     if(inp == 1) :
         nama = input("Masukan nama todo : ")
         d, m, y = datetime.now().day, datetime.now().month, datetime.now().year
-        hr, mnt = map(int, input("Masukan Jam Mulai (HH:MM): ").split(":"))
+        hr, mnt = map(int, input("Masukan Waktu Berakhir (HH:MM): ").split(":"))
         tdoEndDate = datetime(y, m, d, hr, mnt)
 
         todo = {
@@ -133,7 +133,13 @@ while 1 :
         val = send(["View", None])
 
         for i in val :
-            print(f'{i["host"]} ({i["ip_addres"]}) {i["date"]} {i["time"]} melakukan {i["activity"]} value [{i["value"]}]')
+            print(f'--> {i["host"]} ({i["ip_addres"]}) {i["date"]} {i["time"]} melakukan {i["activity"]} value [{i["value"]}]\n')
 
-        input("")
+        input("Enter To Back")
         clear()
+
+    elif inp == 5 :
+        exit()
+    
+    else :
+        print("Input Salah")
