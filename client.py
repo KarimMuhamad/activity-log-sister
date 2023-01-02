@@ -3,6 +3,7 @@ import pickle
 from datetime import datetime
 from os import system, name
 
+# Mendapatkan Ip Addres dan Host Name
 hName = socket.gethostname()
 ipAdd = socket.gethostbyname(hName)
 
@@ -12,6 +13,7 @@ BUFFER_SIZE = 4248
 
 lsTodo = []
 
+#Fungsi Untuk mengirim aktivitass dan connect ke server
 def send(command) :
 
     log = {
@@ -30,6 +32,7 @@ def send(command) :
     client.close()
     return actLog
 
+#Fungsi Untuk Clear Screen Terminal
 def clear():
     # for windows
     if name == 'nt':
@@ -39,6 +42,7 @@ def clear():
     else:
         _ = system('clear')
 
+# Fungsi Untuk mengcek waktu berakhir
 def countDown(endtime) :
     if(datetime.now() >= endtime):
         return "------"
@@ -48,6 +52,7 @@ def countDown(endtime) :
         return "Done"
     
 
+# Fungsi untuk mengubah Status To Do
 def checkStatus(lsTd) :
     for i in lsTd :
         if(datetime.now() >= i["Waktu Berakhir"] and i["Status"] != "Selesai") :
@@ -57,6 +62,7 @@ def checkStatus(lsTd) :
             i["Status"] = "Belum Selesai"
 
 
+# Fungsi Unttuk Melakukan Print Todo
 def printTodo(listOfTodo) :
     idx =1
     for i in lsTodo :
@@ -64,6 +70,7 @@ def printTodo(listOfTodo) :
         print(f'[{idx}]. {i["Nama"]} \t {i["Status"]} \t {countDown(i["Waktu Berakhir"])}')
         idx+=1
 
+# Main Program / Menu
 while 1 :
     checkStatus(lsTodo)
     print("To Do List App")
@@ -132,6 +139,7 @@ while 1 :
     elif inp == 4 : 
         val = send(["View", None])
 
+        #Print View Log
         for i in val :
             print(f'--> {i["host"]} ({i["ip_addres"]}) {i["date"]} {i["time"]} melakukan {i["activity"]} value [{i["value"]}]\n')
 
