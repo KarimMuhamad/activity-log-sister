@@ -7,7 +7,7 @@ hName = socket.gethostname()
 ipAdd = socket.gethostbyname(hName)
 
 TCP_IP = '0.tcp.ap.ngrok.io'
-TCP_PORT = 12290
+TCP_PORT = int(input("TCP PORT : "))
 BUFFER_SIZE = 4248
 
 lsTodo = []
